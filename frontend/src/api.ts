@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: 'http://10.40.47.174:8000', 
 });
 
 // Helper to generate a fake ID so Backend doesn't crash
