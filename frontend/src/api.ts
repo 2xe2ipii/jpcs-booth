@@ -1,20 +1,32 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://10.40.47.174:8000', 
+  // Now it reads from the Vercel environment variable
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
 });
 
-// Helper to generate a fake ID so Backend doesn't crash
-const generateId = (name: string) => {
-  return name.toUpperCase().replace(/\s/g, '') + '_' + Math.floor(Math.random() * 9999);
-};
+export interface Player {
+  id: number;
+  student_id: string; // This is the "John#A1B2" string
+  name: string;       // This is just "John"
+  total_points: number;
+}
 
 export const api = {
-  register: async (name: string) => {
-    // Backend still needs an ID, so we make one up
-    const fakeId = generateId(name);
-    const res = await API.post('/players/register', { student_id: fakeId, name });
-    return { ...res.data, student_id: fakeId }; 
+  // Search for existing Johns
+  searchPlayers: async (name: string): Promise<Player[]> => {
+    if (!name) return [];
+    const res = await API.get(`/players/search?name=${name}`);
+    return res.data;
+  },
+
+  // Register: Pass student_id if selecting existing, or null if new
+  register: async (name: string, existingId?: string) => {
+    const res = await API.post('/players/register', { 
+      name: name, 
+      student_id: existingId || null 
+    });
+    return res.data;
   },
 
   createMatch: async (p1Id: string, p2Id: string) => {

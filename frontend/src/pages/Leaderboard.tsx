@@ -11,45 +11,50 @@ export default function Leaderboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black p-8 flex flex-col items-center">
-      <div className="w-full max-w-4xl border-4 border-gold-600 rounded-lg p-1 bg-gold-600">
-        <div className="bg-casino-green w-full h-full p-8 rounded border-2 border-black">
-            
-            <div className="flex justify-between items-center mb-10 border-b-2 border-gold-600/50 pb-4">
-                <h1 className="text-4xl md:text-5xl font-black text-gold-400 uppercase tracking-widest drop-shadow-lg">
-                    Leaderboard
-                </h1>
-                <button onClick={() => navigate('/')} className="text-gold-500 hover:text-white font-serif italic">
-                    Return to Lobby &rarr;
-                </button>
-            </div>
+    <div className="min-h-screen bg-fun-bg p-8 flex flex-col items-center">
+      <div className="w-full max-w-4xl bg-white border-[6px] border-black rounded-3xl p-8 pop-card">
+        
+        <div className="flex justify-between items-center mb-8 border-b-4 border-black pb-4">
+            <h1 className="text-5xl font-black text-black italic">
+                TOP PLAYERS
+            </h1>
+            <button onClick={() => navigate('/')} className="px-6 py-2 bg-gray-200 hover:bg-gray-300 border-2 border-black rounded-lg font-bold">
+                Back
+            </button>
+        </div>
 
-            <table className="w-full text-left border-collapse">
-                <thead>
-                    <tr className="text-gold-600 uppercase text-sm tracking-wider border-b border-gold-600/30">
-                        <th className="p-4">Rank</th>
-                        <th className="p-4">Player</th>
-                        <th className="p-4 text-right">Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {players.map((p, index) => (
-                        <tr key={index} className="hover:bg-black/20 transition-colors">
-                            <td className="p-4 font-serif text-2xl text-white/50">
-                                {index + 1 === 1 ? '👑' : `#${index + 1}`}
+        <table className="w-full text-left border-separate border-spacing-y-2">
+            <thead>
+                <tr className="text-gray-500 uppercase text-sm tracking-wider">
+                    <th className="p-4">Rank</th>
+                    <th className="p-4">Player</th>
+                    <th className="p-4 text-right">Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {players.map((p, index) => {
+                    const colors = ['bg-fun-yellow', 'bg-gray-300', 'bg-orange-300'];
+                    const bgColor = index < 3 ? colors[index] : 'bg-white border-2 border-gray-100';
+                    const textColor = index < 3 ? 'text-black' : 'text-gray-700';
+                    
+                    return (
+                        <tr key={index} className={`${bgColor} rounded-xl shadow-sm ${index < 3 ? 'border-4 border-black' : ''}`}>
+                            <td className={`p-4 font-black text-2xl ${textColor} rounded-l-xl`}>
+                                #{index + 1}
                             </td>
-                            <td className="p-4 text-xl font-bold text-white font-serif">
-                                {p.name}
+                            <td className="p-4">
+                                <div className={`text-xl font-bold ${textColor}`}>{p.name}</div>
+                                <div className="text-xs font-mono opacity-70">{p.student_id}</div>
                             </td>
-                            <td className="p-4 text-right font-mono text-2xl text-gold-400">
-                                ${p.total_points}
+                            <td className={`p-4 text-right font-black text-2xl ${textColor} rounded-r-xl`}>
+                                {p.total_points}
                             </td>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    );
+                })}
+            </tbody>
+        </table>
 
-        </div>
       </div>
     </div>
   );

@@ -3,14 +3,16 @@ from typing import Optional, List
 
 # --- PLAYER SCHEMAS ---
 class PlayerBase(BaseModel):
-    student_id: str
     name: str
 
 class PlayerCreate(PlayerBase):
-    pass
+    # Optional: If they pick an existing user, they send the ID.
+    # If they want a new one, they send null/empty, and we generate it.
+    student_id: Optional[str] = None 
 
 class PlayerResponse(PlayerBase):
     id: int
+    student_id: str # This is the "John#1234"
     total_points: int
     
     class Config:
@@ -30,7 +32,7 @@ class MatchResponse(BaseModel):
     class Config:
         from_attributes = True
 
-# --- SCORE SUBMISSION (FROM ARDUINO) ---
+# --- SCORE SUBMISSION ---
 class ScoreSubmit(BaseModel):
     score1: int
     score2: int

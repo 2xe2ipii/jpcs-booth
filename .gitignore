@@ -10,6 +10,7 @@ __pycache__/
 *.pyo
 *.pyd
 .env
+env
 .pytest_cache/
 
 # SQLite Database (Don't commit your local test data)
