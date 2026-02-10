@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.schemas import all_schemas
 from app.crud import services
+from app.models import all_models  # <--- FIXED: Added missing import
 
 router = APIRouter(prefix="/matches", tags=["Matches"])
 
@@ -35,3 +36,18 @@ def submit_score(match_id: int, scores: all_schemas.ScoreSubmit, db: Session = D
     if not result:
         raise HTTPException(status_code=400, detail="Match not found or already finished")
     return {"message": "Scores recorded", "winner_id": result.winner_id}
+
+# 4. EMERGENCY RESET (Fixes the stuck database)
+@router.post("/reset")
+def reset_matches(db: Session = Depends(get_db)):
+    """Force finishes all ongoing matches so you can start a new one."""
+    stuck_matches = db.query(all_models.Match).filter(all_models.Match.status == "ongoing").all()
+    
+    for match in stuck_matches:
+        match.status = "finished"
+        # Optional: Give them a dummy score so they don't look broken
+        match.score1 = 0
+        match.score2 = 0
+    
+    db.commit()
+    return {"message": f"Reset complete. {len(stuck_matches)} matches force-finished."}

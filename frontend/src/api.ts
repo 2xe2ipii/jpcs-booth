@@ -49,5 +49,12 @@ export const api = {
   getLeaderboard: async () => {
     const res = await API.get('/players/leaderboard');
     return res.data;
+  },
+
+  // --- ADDED THIS FUNCTION ONLY ---
+  // Calls the emergency reset endpoint we added to the backend
+  resetMatches: async () => {
+    const res = await API.post('/matches/reset');
+    return res.data;
   }
 };
