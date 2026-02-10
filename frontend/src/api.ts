@@ -1,30 +1,38 @@
 import axios from 'axios';
 
 const API = axios.create({
-  // Now it reads from the Vercel environment variable
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
 });
 
 export interface Player {
   id: number;
-  student_id: string; // This is the "John#A1B2" string
-  name: string;       // This is just "John"
+  student_id: string; 
+  name: string;      
   total_points: number;
 }
 
+// Helper to generate a fake ID so Backend doesn't crash
+const generateId = (name: string) => {
+  // Generates "JOHN_4921" from "John"
+  return name.toUpperCase().replace(/\s/g, '') + '_' + Math.floor(Math.random() * 9999);
+};
+
 export const api = {
-  // Search for existing Johns
+  // Search for existing players
   searchPlayers: async (name: string): Promise<Player[]> => {
     if (!name) return [];
     const res = await API.get(`/players/search?name=${name}`);
     return res.data;
   },
 
-  // Register: Pass student_id if selecting existing, or null if new
+  // Register: Generates a random ID if one isn't provided
   register: async (name: string, existingId?: string) => {
+    // CRITICAL FIX: If no existingId, generate a random one.
+    const finalId = existingId || generateId(name);
+    
     const res = await API.post('/players/register', { 
       name: name, 
-      student_id: existingId || null 
+      student_id: finalId 
     });
     return res.data;
   },
@@ -51,8 +59,7 @@ export const api = {
     return res.data;
   },
 
-  // --- ADDED THIS FUNCTION ONLY ---
-  // Calls the emergency reset endpoint we added to the backend
+  // The Reset Button (Keep this for safety!)
   resetMatches: async () => {
     const res = await API.post('/matches/reset');
     return res.data;
