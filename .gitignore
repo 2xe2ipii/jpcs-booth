@@ -1,0 +1,30 @@
+# --- System / IDE Files ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- Python (Backend) ---
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.pytest_cache/
+
+# SQLite Database (Don't commit your local test data)
+*.db
+*.sqlite3
+
+# --- Node / React (Frontend) ---
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Build Output ---
+build/
