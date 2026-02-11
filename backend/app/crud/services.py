@@ -76,7 +76,7 @@ def create_match(db: Session, p1_id: int, p2_id: int):
     return new_match
 
 def get_current_match(db: Session):
-    return db.query(all_models.Match).filter(all_models.Match.status == "ongoing").first()
+    return db.query(all_models.Match).order_by(all_models.Match.id.desc()).first()
 
 def finish_match(db: Session, match_id: int, scores: all_schemas.ScoreSubmit):
     match = db.query(all_models.Match).filter(all_models.Match.id == match_id).first()
